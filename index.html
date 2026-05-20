@@ -1,92 +1,232 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Saudarjun Maggi Stall | Best Street-Style Noodles in Mumbai</title>
-    <link rel="stylesheet" href="style.css">
-    <link rel="icon" type="image/x-icon" href="/favicon.ico">
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Saudarjun Maggi Stall | Exclusive Menu</title>
+  <style>
+    :root {
+      --bg-dark: #0a0a0a;
+      --card-bg: #141414;
+      --card-hover: #1e1e1e;
+      --primary-gold: #ffcc00;
+      --text-light: #ffffff;
+      --text-muted: #888888;
+    }
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    }
+    body {
+      background-color: var(--bg-dark);
+      color: var(--text-light);
+      line-height: 1.6;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      min-height: 100vh;
+    }
+    header {
+      text-align: center;
+      padding: 60px 20px;
+      width: 100%;
+      max-width: 800px;
+      background: linear-gradient(180deg, #1a1a1a 0%, var(--bg-dark) 100%);
+      border-bottom: 2px solid var(--primary-gold);
+    }
+    .stall-name {
+      font-size: 2.8rem;
+      text-transform: uppercase;
+      letter-spacing: 3px;
+      font-weight: 900;
+    }
+    .stall-name span {
+      color: var(--primary-gold);
+    }
+    .owner-name {
+      color: var(--text-muted);
+      font-size: 1.2rem;
+      margin-top: 10px;
+      font-style: italic;
+    }
+    main {
+      padding: 40px 20px;
+      width: 100%;
+      max-width: 800px;
+    }
+    .menu-section {
+      display: flex;
+      flex-direction: column;
+      gap: 20px;
+    }
+    .menu-item {
+      background-color: var(--card-bg);
+      border: 1px solid #222;
+      border-radius: 12px;
+      padding: 20px;
+      display: flex;
+      align-items: center;
+      gap: 20px;
+      transition: all 0.3s ease-in-out;
+      cursor: pointer;
+    }
+    .menu-item:hover {
+      background-color: var(--card-hover);
+      border-color: var(--primary-gold);
+      transform: translateY(-3px);
+      box-shadow: 0 5px 15px rgba(255, 204, 0, 0.1);
+    }
+    .item-image-area {
+      position: relative;
+      flex-shrink: 0;
+      width: 120px;
+      height: 120px;
+      border-radius: 8px;
+      overflow: hidden;
+      background-color: #222;
+    }
+    .item-image-area img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+    .tag-label {
+      position: absolute;
+      top: 5px;
+      left: 5px;
+      background-color: var(--primary-gold);
+      color: var(--bg-dark);
+      padding: 2px 8px;
+      font-size: 0.7rem;
+      font-weight: bold;
+      border-radius: 4px;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      z-index: 10;
+    }
+    .item-details {
+      flex-grow: 1;
+    }
+    .item-details h3 {
+      color: var(--primary-gold);
+      font-size: 1.3rem;
+      font-weight: 700;
+    }
+    .item-details p {
+      color: var(--text-muted);
+      font-size: 0.9rem;
+      margin-top: 5px;
+    }
+    .item-price {
+      font-size: 1.4rem;
+      font-weight: 900;
+      color: var(--text-light);
+    }
+    .find-us-btn {
+      display: block;
+      width: 100%;
+      background-color: var(--primary-gold);
+      color: var(--bg-dark);
+      text-align: center;
+      padding: 15px 30px;
+      margin-top: 40px;
+      border-radius: 8px;
+      font-weight: 800;
+      text-transform: uppercase;
+      letter-spacing: 2px;
+      text-decoration: none;
+      transition: background-color 0.2s ease;
+      font-size: 1.2rem;
+    }
+    .find-us-btn:hover {
+      background-color: #e6b800;
+    }
+    footer {
+      text-align: center;
+      padding: 30px;
+      color: var(--text-muted);
+      font-size: 0.8rem;
+    }
+  </style>
 </head>
 <body>
-    <header>
-        <div class="logo">
-            <h1>SAUDARJUN <span>MAGGI STALL</span></h1>
+  <header>
+    <div class="stall-name">Saudarjun <span>Maggi Stall</span></div>
+    <div class="owner-name">Navi Mumbai's Finest | Since 2023</div>
+  </header>
+  
+  <main>
+    <div class="menu-section">
+      
+      <div class="menu-item">
+        <div class="item-image-area">
+          <span class="tag-label">SAUDARJUN</span>
+          <img src="https://images.unsplash.com/photo-1612929633738-8fe44f7ec841?auto=format&fit=crop&w=300&q=80" alt="Classic Maggi">
         </div>
-        <nav>
-            <ul>
-                <li><a href="#">Menu</a></li>
-                <li><a href="#">Find Us</a></li>
-                <li><a href="#">Hours</a></li>
-                <li><a href="#">Story</a></li>
-            </ul>
-        </nav>
-        <div class="header-action">
-            <a href="#" class="btn-primary">Find Our Stall Now</a>
+        <div class="item-details">
+          <h3>Classic Masala Maggi</h3>
+          <p>The original street-style favorite, cooked just right.</p>
         </div>
-    </header>
-
-    <main>
-        <div class="menu-ui">
-            <div class="menu-list">
-                <div class="menu-item-card">
-                    <img src="masala.jpg" alt="Classic Masala Maggi" class="food-image">
-                    <img src="tag.png" alt="SAUDARJUN" class="gold-tag">
-                    <div class="menu-content">
-                        <h2>Classic Masala Maggi</h2>
-                        <p class="description">Perfectly portioned maggi, spice-laden masala, with an authentic street-style finish.</p>
-                        <p class="price">₹50</p>
-                    </div>
-                </div>
-
-                <div class="menu-item-card">
-                    <img src="cheese.jpg" alt="Cheese Burst Maggi" class="food-image">
-                    <img src="tag.png" alt="SAUDARJUN" class="gold-tag">
-                    <div class="menu-content">
-                        <h2>Cheese Burst Maggi</h2>
-                        <p class="description">Loaded with melting processed cheddar and mozzarella for a rich, gooey experience.</p>
-                        <p class="price">₹70</p>
-                    </div>
-                </div>
-
-                <div class="menu-item-card active-card">
-                    <img src="tadka.jpg" alt="Spicy Tadka Maggi" class="food-image">
-                    <img src="tag.png" alt="SAUDARJUN" class="gold-tag">
-                    <div class="menu-content">
-                        <h2>Spicy Tadka Maggi</h2>
-                        <p class="description">A flavorful, visible tadka with whole dried chilies, garlic, and rich masala.</p>
-                        <p class="price">₹60</p>
-                    </div>
-                </div>
-
-                <div class="menu-item-card">
-                    <img src="veggie.jpg" alt="Veggie Loaded Maggi" class="food-image">
-                    <img src="tag.png" alt="SAUDARJUN" class="gold-tag">
-                    <div class="menu-content">
-                        <h2>Veggie Loaded Maggi</h2>
-                        <p class="description">A colorful, vibrant blend of carrots, peas, and authentic masala.</p>
-                        <p class="price">₹65</p>
-                    </div>
-                </div>
-
-                <div class="menu-item-card">
-                    <img src="paneer.jpg" alt="Paneer Butter Maggi" class="food-image">
-                    <img src="tag.png" alt="SAUDARJUN" class="gold-tag">
-                    <div class="menu-content">
-                        <h2>Paneer Butter Maggi</h2>
-                        <p class="description">Rich masala noodles with large, prominent, unmistakably golden-fried paneer chunks.</p>
-                        <p class="price">₹90</p>
-                    </div>
-                </div>
-            </div>
+        <div class="item-price">₹50</div>
+      </div>
+      
+      <div class="menu-item">
+        <div class="item-image-area">
+          <span class="tag-label">SAUDARJUN</span>
+          <img src="https://images.unsplash.com/photo-1617093727343-374698b1b08d?auto=format&fit=crop&w=300&q=80" alt="Cheese Maggi">
         </div>
-    </main>
-
-    <footer>
-        <div class="footer-bottom">
-            <p>&copy; 2026 SAUDARJUN MAGGI STALL. Crafted with Love.</p>
+        <div class="item-details">
+          <h3>Cheese Burst Maggi</h3>
+          <p>Loaded with melting cheese for a rich experience.</p>
         </div>
-    </footer>
+        <div class="item-price">₹70</div>
+      </div>
 
-    <script src="script.js"></script>
+      <div class="menu-item">
+        <div class="item-image-area">
+          <span class="tag-label">SAUDARJUN</span>
+          <img src="https://images.unsplash.com/photo-1623341214825-9f4f963727da?auto=format&fit=crop&w=300&q=80" alt="Spicy Maggi">
+        </div>
+        <div class="item-details">
+          <h3>Spicy Tadka Maggi</h3>
+          <p>Extra spices, garlic, and chili for those who dare.</p>
+        </div>
+        <div class="item-price">₹60</div>
+      </div>
+
+      <div class="menu-item">
+        <div class="item-image-area">
+          <span class="tag-label">SAUDARJUN</span>
+          <img src="https://images.unsplash.com/photo-1552611052-33e04de081de?auto=format&fit=crop&w=300&q=80" alt="Veggie Maggi">
+        </div>
+        <div class="item-details">
+          <h3>Veggie Loaded Maggi</h3>
+          <p>Packed with fresh carrots, peas, and onions.</p>
+        </div>
+        <div class="item-price">₹65</div>
+      </div>
+
+      <div class="menu-item">
+        <div class="item-image-area">
+          <span class="tag-label">SAUDARJUN</span>
+          <img src="https://images.unsplash.com/photo-1569718212165-3a8278d5f624?auto=format&fit=crop&w=300&q=80" alt="Paneer Maggi">
+        </div>
+        <div class="item-details">
+          <h3>Paneer Butter Maggi</h3>
+          <p>Rich and creamy with soft paneer chunks.</p>
+        </div>
+        <div class="item-price">₹90</div>
+      </div>
+
+    </div>
+
+    <a href="#" class="find-us-btn">Find Our Stall Now</a>
+  </main>
+
+  <footer>
+    Serving delicious Maggi every single day!
+  </footer>
 </body>
 </html>
