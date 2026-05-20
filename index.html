@@ -12,6 +12,7 @@
       --primary-gold: #ffcc00;
       --text-light: #ffffff;
       --text-muted: #888888;
+      --selected-bg: #2a2200; /* Gold tint for selection */
     }
     * {
       margin: 0;
@@ -65,20 +66,27 @@
     }
     .menu-item {
       background-color: var(--card-bg);
-      border: 1px solid #222;
+      border: 2px solid #222;
       border-radius: 12px;
       padding: 20px;
       display: flex;
       align-items: center;
       gap: 20px;
       transition: all 0.3s ease-in-out;
+      cursor: pointer;
     }
     .menu-item:hover {
       background-color: var(--card-hover);
-      border-color: var(--primary-gold);
-      transform: translateY(-3px);
-      box-shadow: 0 5px 15px rgba(255, 204, 0, 0.1);
+      border-color: #555;
     }
+    /* SELECTION STYLE */
+    .menu-item.selected {
+      border-color: var(--primary-gold);
+      background-color: var(--selected-bg);
+      transform: scale(1.02);
+      box-shadow: 0 5px 15px rgba(255, 204, 0, 0.2);
+    }
+    
     .item-image-area {
       position: relative;
       flex-shrink: 0;
@@ -126,11 +134,11 @@
       color: var(--text-light);
     }
 
-    /* --- PAYMENT SECTION (HIDDEN BY DEFAULT) --- */
+    /* --- PAYMENT SECTION --- */
     #payment-section {
       display: none; 
       background-color: var(--card-bg);
-      border: 1px solid var(--primary-gold);
+      border: 1px solid #333;
       border-radius: 12px;
       padding: 30px;
       width: 100%;
@@ -139,6 +147,14 @@
       color: var(--primary-gold);
       margin-bottom: 20px;
       text-align: center;
+    }
+    .order-summary-box {
+      background-color: #222;
+      padding: 15px;
+      border-radius: 8px;
+      margin-bottom: 25px;
+      text-align: center;
+      border: 1px dashed var(--primary-gold);
     }
     .form-group {
       margin-bottom: 20px;
@@ -169,16 +185,45 @@
     }
     .method-card {
       flex: 1;
-      background-color: #222;
-      border: 1px solid #444;
       padding: 15px;
       text-align: center;
       border-radius: 6px;
-      cursor: pointer;
       font-weight: bold;
     }
-    .method-card:hover {
-      border-color: var(--primary-gold);
+    .method-card.active {
+      background-color: var(--selected-bg);
+      border: 2px solid var(--primary-gold);
+      color: var(--primary-gold);
+    }
+    .method-card.disabled {
+      background-color: #1a1a1a;
+      border: 1px solid #333;
+      color: #555;
+      cursor: not-allowed;
+      text-decoration: line-through;
+    }
+
+    /* --- CONFIRMATION SECTION --- */
+    #confirmation-section {
+      display: none;
+      text-align: center;
+      background-color: var(--card-bg);
+      border: 1px solid var(--primary-gold);
+      border-radius: 12px;
+      padding: 40px 20px;
+    }
+    #confirmation-section h2 {
+      color: #00ff66;
+      font-size: 2rem;
+      margin-bottom: 15px;
+    }
+    .receipt-box {
+      background-color: #222;
+      padding: 20px;
+      border-radius: 8px;
+      margin-top: 20px;
+      text-align: left;
+      font-size: 1.1rem;
     }
 
     /* --- BUTTONS --- */
@@ -202,6 +247,17 @@
     .action-btn:hover {
       background-color: #e6b800;
     }
+    .back-btn {
+      background-color: transparent;
+      border: 2px solid #555;
+      color: var(--text-light);
+      margin-top: 15px;
+    }
+    .back-btn:hover {
+      background-color: #333;
+      border-color: #777;
+    }
+    
     footer {
       text-align: center;
       padding: 30px;
@@ -285,31 +341,48 @@
     <div id="payment-section">
       <h2>Delivery Details</h2>
       
+      <div class="order-summary-box">
+        Selected: <strong id="summary-item" style="color: var(--primary-gold);">None</strong> <br>
+        Total: <strong id="summary-price">₹0</strong>
+      </div>
+      
       <div class="form-group">
         <label>Full Name</label>
-        <input type="text" placeholder="Enter your name">
+        <input type="text" id="custName" placeholder="Enter your name">
       </div>
 
       <div class="form-group">
         <label>Phone Number</label>
-        <input type="tel" placeholder="+91">
+        <input type="tel" id="custPhone" placeholder="+91">
       </div>
 
       <div class="form-group">
         <label>Delivery Address</label>
-        <textarea rows="3" placeholder="Enter your full address in Navi Mumbai..."></textarea>
+        <textarea id="custAddress" rows="3" placeholder="Enter your full address in Navi Mumbai..."></textarea>
       </div>
 
       <div class="form-group">
-        <label>Select Payment Method</label>
+        <label>Payment Method</label>
         <div class="payment-methods">
-          <div class="method-card">Cash on Delivery</div>
-          <div class="method-card">UPI / GPay</div>
+          <div class="method-card active">Cash on Delivery</div>
+          <div class="method-card disabled">UPI (Not Available)</div>
         </div>
       </div>
 
-      <button class="action-btn">Place Order</button>
+      <button id="placeOrderBtn" class="action-btn">Confirm Order</button>
+      <button id="backBtn" class="action-btn back-btn">⬅ Back to Menu</button>
     </div>
+
+    <div id="confirmation-section">
+      <h2>Order Placed Successfully! 🎉</h2>
+      <p>Your Maggi is being prepared freshly for you.</p>
+      
+      <div class="receipt-box" id="receiptBox">
+        </div>
+      
+      <button onclick="location.reload()" class="action-btn back-btn" style="margin-top: 30px;">Order Another Maggi</button>
+    </div>
+
   </main>
 
   <footer>
@@ -317,12 +390,69 @@
   </footer>
 
   <script>
+    let selectedMaggi = "";
+    let selectedPrice = "";
+
+    // 1. SELECT MAGGI LOGIC
+    const items = document.querySelectorAll('.menu-item');
+    items.forEach(item => {
+      item.addEventListener('click', function() {
+        // Remove selection from all
+        items.forEach(i => i.classList.remove('selected'));
+        // Add selection to clicked one
+        this.classList.add('selected');
+        
+        // Save details
+        selectedMaggi = this.querySelector('h3').innerText;
+        selectedPrice = this.querySelector('.item-price').innerText;
+      });
+    });
+
+    // 2. NEXT BUTTON LOGIC
     document.getElementById('nextBtn').addEventListener('click', function() {
-      // Hide the menu
+      if(selectedMaggi === "") {
+        alert("Please select a Maggi from the menu first!");
+        return;
+      }
+      
+      // Update summary box
+      document.getElementById('summary-item').innerText = selectedMaggi;
+      document.getElementById('summary-price').innerText = selectedPrice;
+
+      // Switch screens
       document.getElementById('menu-section').style.display = 'none';
-      // Show the payment section
       document.getElementById('payment-section').style.display = 'block';
-      // Scroll to the top
+      window.scrollTo(0, 0);
+    });
+
+    // 3. BACK BUTTON LOGIC
+    document.getElementById('backBtn').addEventListener('click', function() {
+      document.getElementById('payment-section').style.display = 'none';
+      document.getElementById('menu-section').style.display = 'flex';
+      window.scrollTo(0, 0);
+    });
+
+    // 4. PLACE ORDER LOGIC
+    document.getElementById('placeOrderBtn').addEventListener('click', function() {
+      let name = document.getElementById('custName').value;
+      let address = document.getElementById('custAddress').value;
+      let phone = document.getElementById('custPhone').value;
+
+      if(name === "" || address === "" || phone === "") {
+        alert("Please fill in your Name, Phone, and Address to order.");
+        return;
+      }
+
+      // Build Receipt
+      document.getElementById('receiptBox').innerHTML = 
+        "<strong>Name:</strong> " + name + "<br><br>" +
+        "<strong>Delivery Address:</strong><br>" + address + "<br><br>" +
+        "<strong>Order Details:</strong><br><span style='color: #ffcc00; font-weight: bold;'>" + selectedMaggi + "</span><br><br>" +
+        "<strong>Amount to Pay:</strong> " + selectedPrice + " (Cash on Delivery)";
+
+      // Switch Screens
+      document.getElementById('payment-section').style.display = 'none';
+      document.getElementById('confirmation-section').style.display = 'block';
       window.scrollTo(0, 0);
     });
   </script>
