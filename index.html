@@ -12,7 +12,7 @@
       --primary-gold: #ffcc00;
       --text-light: #ffffff;
       --text-muted: #888888;
-      --selected-bg: #2a2200; /* Gold tint for selection */
+      --selected-bg: #2a2200;
     }
     * {
       margin: 0;
@@ -79,7 +79,6 @@
       background-color: var(--card-hover);
       border-color: #555;
     }
-    /* SELECTION STYLE */
     .menu-item.selected {
       border-color: var(--primary-gold);
       background-color: var(--selected-bg);
@@ -326,7 +325,7 @@
       <div class="menu-item">
         <div class="item-image-area">
           <span class="tag-label">SAUDARJUN</span>
-          <img src="https://images.unsplash.com/photo-1598515573423-8106a72e8fa4?auto=format&fit=crop&w=300&q=80" alt="Paneer Maggi">
+          <img src="https://images.unsplash.com/photo-1565557623262-b51c2513a641?auto=format&fit=crop&w=300&q=80" alt="Paneer Maggi">
         </div>
         <div class="item-details">
           <h3>Paneer Butter Maggi</h3>
@@ -375,7 +374,7 @@
 
     <div id="confirmation-section">
       <h2>Order Placed Successfully! 🎉</h2>
-      <p>Your Maggi is being prepared freshly for you.</p>
+      <p>Your Maggi order has been sent to the kitchen.</p>
       
       <div class="receipt-box" id="receiptBox">
         </div>
@@ -397,12 +396,9 @@
     const items = document.querySelectorAll('.menu-item');
     items.forEach(item => {
       item.addEventListener('click', function() {
-        // Remove selection from all
         items.forEach(i => i.classList.remove('selected'));
-        // Add selection to clicked one
         this.classList.add('selected');
         
-        // Save details
         selectedMaggi = this.querySelector('h3').innerText;
         selectedPrice = this.querySelector('.item-price').innerText;
       });
@@ -415,11 +411,9 @@
         return;
       }
       
-      // Update summary box
       document.getElementById('summary-item').innerText = selectedMaggi;
       document.getElementById('summary-price').innerText = selectedPrice;
 
-      // Switch screens
       document.getElementById('menu-section').style.display = 'none';
       document.getElementById('payment-section').style.display = 'block';
       window.scrollTo(0, 0);
@@ -432,7 +426,7 @@
       window.scrollTo(0, 0);
     });
 
-    // 4. PLACE ORDER LOGIC
+    // 4. PLACE ORDER & EMAIL NOTIFICATION LOGIC
     document.getElementById('placeOrderBtn').addEventListener('click', function() {
       let name = document.getElementById('custName').value;
       let address = document.getElementById('custAddress').value;
@@ -443,17 +437,39 @@
         return;
       }
 
-      // Build Receipt
-      document.getElementById('receiptBox').innerHTML = 
-        "<strong>Name:</strong> " + name + "<br><br>" +
-        "<strong>Delivery Address:</strong><br>" + address + "<br><br>" +
-        "<strong>Order Details:</strong><br><span style='color: #ffcc00; font-weight: bold;'>" + selectedMaggi + "</span><br><br>" +
-        "<strong>Amount to Pay:</strong> " + selectedPrice + " (Cash on Delivery)";
+      document.getElementById('placeOrderBtn').innerText = "Sending Order...";
 
-      // Switch Screens
-      document.getElementById('payment-section').style.display = 'none';
-      document.getElementById('confirmation-section').style.display = 'block';
-      window.scrollTo(0, 0);
+      // AJAX Fetch to send Email directly without backend
+      fetch("https://formsubmit.co/ajax/APNA_EMAIL_YAHAN_DALO@GMAIL.COM", {
+          method: "POST",
+          headers: { 
+              'Content-Type': 'application/json',
+              'Accept': 'application/json'
+          },
+          body: JSON.stringify({
+              Customer_Name: name,
+              Customer_Phone: phone,
+              Delivery_Address: address,
+              Ordered_Item: selectedMaggi,
+              Total_Bill: selectedPrice,
+              Payment_Mode: "Cash on Delivery"
+          })
+      })
+      .then(response => {
+          document.getElementById('receiptBox').innerHTML = 
+            "<strong>Name:</strong> " + name + "<br><br>" +
+            "<strong>Delivery Address:</strong><br>" + address + "<br><br>" +
+            "<strong>Order Details:</strong><br><span style='color: #ffcc00; font-weight: bold;'>" + selectedMaggi + "</span><br><br>" +
+            "<strong>Amount to Pay:</strong> " + selectedPrice + " (Cash on Delivery)";
+
+          document.getElementById('payment-section').style.display = 'none';
+          document.getElementById('confirmation-section').style.display = 'block';
+          window.scrollTo(0, 0);
+      })
+      .catch(error => {
+          alert("Something went wrong. Please try again.");
+          document.getElementById('placeOrderBtn').innerText = "Confirm Order";
+      });
     });
   </script>
 </body>
