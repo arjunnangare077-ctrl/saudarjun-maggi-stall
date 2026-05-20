@@ -3,14 +3,14 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Saudarjun Maggi Stall | Exclusive Menu</title>
+  <title>Saudarjun Maggi Stall | Navi Mumbai</title>
   <style>
     :root {
-      --bg-dark: #0f0f0f;
-      --card-bg: #1a1a1a;
+      --bg-dark: #121212;
+      --card-bg: #1e1e1e;
       --primary-gold: #ffcc00;
       --text-light: #ffffff;
-      --text-muted: #888888;
+      --text-muted: #a0a0a0;
     }
     * {
       margin: 0;
@@ -26,8 +26,8 @@
     header {
       text-align: center;
       padding: 40px 20px;
-      background: linear-gradient(180deg, #2a2a2a 0%, var(--bg-dark) 100%);
-      border-bottom: 2px solid var(--primary-gold);
+      background: linear-gradient(180deg, #222 0%, var(--bg-dark) 100%);
+      border-bottom: 1px solid #333;
     }
     .stall-name {
       font-size: 2.5rem;
@@ -38,47 +38,91 @@
     .stall-name span {
       color: var(--primary-gold);
     }
-    .owner-name {
+    .location {
       color: var(--text-muted);
-      font-size: 1.1rem;
+      font-size: 1rem;
       margin-top: 5px;
-      font-style: italic;
     }
     main {
       padding: 40px 20px;
-      max-width: 800px;
+      max-width: 600px;
       margin: 0 auto;
-      text-align: center;
     }
     .menu-item {
       background-color: var(--card-bg);
-      margin: 20px 0;
+      margin-bottom: 15px;
       padding: 20px;
       border-radius: 8px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
       border: 1px solid #333;
     }
-    .menu-item h3 {
+    .item-details h3 {
       color: var(--primary-gold);
-      margin-bottom: 10px;
+      font-size: 1.2rem;
+    }
+    .item-details p {
+      color: var(--text-muted);
+      font-size: 0.9rem;
+      margin-top: 4px;
+    }
+    .price {
+      font-size: 1.2rem;
+      font-weight: bold;
+      color: var(--text-light);
+    }
+    footer {
+      text-align: center;
+      padding: 20px;
+      color: var(--text-muted);
+      font-size: 0.8rem;
+      margin-top: 20px;
     }
   </style>
 </head>
 <body>
   <header>
     <div class="stall-name">Saudarjun <span>Maggi Stall</span></div>
-    <div class="owner-name">Exclusive Menu</div>
+    <div class="location">Serving the best Maggi in Navi Mumbai</div>
   </header>
   
   <main>
     <div class="menu-item">
-      <h3>Classic Masala Maggi</h3>
-      <p>The original favorite, cooked to perfection.</p>
+      <div class="item-details">
+        <h3>Classic Masala Maggi</h3>
+        <p>The original favorite</p>
+      </div>
+      <div class="price">₹50</div>
     </div>
     
     <div class="menu-item">
-      <h3>Cheese Burst Maggi</h3>
-      <p>Loaded with double cheese and secret spices.</p>
+      <div class="item-details">
+        <h3>Cheese Burst Maggi</h3>
+        <p>Loaded with double cheese</p>
+      </div>
+      <div class="price">₹70</div>
+    </div>
+
+    <div class="menu-item">
+      <div class="item-details">
+        <h3>Spicy Tadka Maggi</h3>
+        <p>Extra spicy with garlic and chili</p>
+      </div>
+      <div class="price">₹60</div>
+    </div>
+
+    <div class="menu-item">
+      <div class="item-details">
+        <h3>Paneer Tikka Maggi</h3>
+        <p>Roasted paneer chunks</p>
+      </div>
+      <div class="price">₹90</div>
     </div>
   </main>
+
+  <footer>
+    Open Daily
+  </footer>
 </body>
 </html>
