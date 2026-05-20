@@ -325,7 +325,7 @@
       <div class="menu-item">
         <div class="item-image-area">
           <span class="tag-label">SAUDARJUN</span>
-          <img src="https://images.unsplash.com/photo-1565557623262-b51c2513a641?auto=format&fit=crop&w=300&q=80" alt="Paneer Maggi">
+          <img src="https://images.unsplash.com/photo-1616854583151-5b72e51921f9?auto=format&fit=crop&w=300&q=80" alt="Paneer Maggi">
         </div>
         <div class="item-details">
           <h3>Paneer Butter Maggi</h3>
@@ -426,7 +426,7 @@
       window.scrollTo(0, 0);
     });
 
-    // 4. PLACE ORDER & EMAIL NOTIFICATION LOGIC
+    // 4. PLACE ORDER & EMAIL NOTIFICATION LOGIC (WITH NEW EMAIL)
     document.getElementById('placeOrderBtn').addEventListener('click', function() {
       let name = document.getElementById('custName').value;
       let address = document.getElementById('custAddress').value;
@@ -439,8 +439,8 @@
 
       document.getElementById('placeOrderBtn').innerText = "Sending Order...";
 
-      // AJAX Fetch to send Email directly without backend
-      fetch("https://formsubmit.co/ajax/APNA_EMAIL_YAHAN_DALO@GMAIL.COM", {
+      // Fetch with specific email for formsubmit.co
+      fetch("https://formsubmit.co/ajax/saudarjun.orders@gmail.com", {
           method: "POST",
           headers: { 
               'Content-Type': 'application/json',
