@@ -58,7 +58,6 @@
       max-width: 800px;
     }
     
-    /* --- MENU SECTION --- */
     #menu-section {
       display: flex;
       flex-direction: column;
@@ -133,7 +132,6 @@
       color: var(--text-light);
     }
 
-    /* --- PAYMENT SECTION --- */
     #payment-section {
       display: none; 
       background-color: var(--card-bg);
@@ -202,30 +200,6 @@
       text-decoration: line-through;
     }
 
-    /* --- CONFIRMATION SECTION --- */
-    #confirmation-section {
-      display: none;
-      text-align: center;
-      background-color: var(--card-bg);
-      border: 1px solid var(--primary-gold);
-      border-radius: 12px;
-      padding: 40px 20px;
-    }
-    #confirmation-section h2 {
-      color: #00ff66;
-      font-size: 2rem;
-      margin-bottom: 15px;
-    }
-    .receipt-box {
-      background-color: #222;
-      padding: 20px;
-      border-radius: 8px;
-      margin-top: 20px;
-      text-align: left;
-      font-size: 1.1rem;
-    }
-
-    /* --- BUTTONS --- */
     .action-btn {
       display: block;
       width: 100%;
@@ -273,7 +247,6 @@
   
   <main>
     <div id="menu-section">
-      
       <div class="menu-item">
         <div class="item-image-area">
           <span class="tag-label">SAUDARJUN</span>
@@ -359,17 +332,6 @@
       <button id="placeOrderBtn" class="action-btn">Confirm Order</button>
       <button id="backBtn" class="action-btn back-btn">⬅ Back to Menu</button>
     </div>
-
-    <div id="confirmation-section">
-      <h2>Order Placed Successfully! 🎉</h2>
-      <p>Your Maggi order has been sent to the kitchen.</p>
-      
-      <div class="receipt-box" id="receiptBox">
-        </div>
-      
-      <button onclick="location.reload()" class="action-btn back-btn" style="margin-top: 30px;">Order Another Maggi</button>
-    </div>
-
   </main>
 
   <footer>
@@ -380,41 +342,35 @@
     let selectedMaggi = "";
     let selectedPrice = "";
 
-    // 1. SELECT MAGGI LOGIC
     const items = document.querySelectorAll('.menu-item');
     items.forEach(item => {
       item.addEventListener('click', function() {
         items.forEach(i => i.classList.remove('selected'));
         this.classList.add('selected');
-        
         selectedMaggi = this.querySelector('h3').innerText;
         selectedPrice = this.querySelector('.item-price').innerText;
       });
     });
 
-    // 2. NEXT BUTTON LOGIC
     document.getElementById('nextBtn').addEventListener('click', function() {
       if(selectedMaggi === "") {
         alert("Please select a Maggi from the menu first!");
         return;
       }
-      
       document.getElementById('summary-item').innerText = selectedMaggi;
       document.getElementById('summary-price').innerText = selectedPrice;
-
       document.getElementById('menu-section').style.display = 'none';
       document.getElementById('payment-section').style.display = 'block';
       window.scrollTo(0, 0);
     });
 
-    // 3. BACK BUTTON LOGIC
     document.getElementById('backBtn').addEventListener('click', function() {
       document.getElementById('payment-section').style.display = 'none';
       document.getElementById('menu-section').style.display = 'flex';
       window.scrollTo(0, 0);
     });
 
-    // 4. PLACE ORDER & EMAIL NOTIFICATION LOGIC
+    // DIRECT SENDING SYSTEM (No more AJAX error)
     document.getElementById('placeOrderBtn').addEventListener('click', function() {
       let name = document.getElementById('custName').value;
       let address = document.getElementById('custAddress').value;
@@ -425,38 +381,34 @@
         return;
       }
 
-      document.getElementById('placeOrderBtn').innerText = "Sending Order...";
+      document.getElementById('placeOrderBtn').innerText = "Sending...";
 
-      fetch("https://formsubmit.co/ajax/saudarjun.orders@gmail.com", {
-          method: "POST",
-          headers: { 
-              'Content-Type': 'application/json',
-              'Accept': 'application/json'
-          },
-          body: JSON.stringify({
-              Customer_Name: name,
-              Customer_Phone: phone,
-              Delivery_Address: address,
-              Ordered_Item: selectedMaggi,
-              Total_Bill: selectedPrice,
-              Payment_Mode: "Cash on Delivery"
-          })
-      })
-      .then(response => {
-          document.getElementById('receiptBox').innerHTML = 
-            "<strong>Name:</strong> " + name + "<br><br>" +
-            "<strong>Delivery Address:</strong><br>" + address + "<br><br>" +
-            "<strong>Order Details:</strong><br><span style='color: #ffcc00; font-weight: bold;'>" + selectedMaggi + "</span><br><br>" +
-            "<strong>Amount to Pay:</strong> " + selectedPrice + " (Cash on Delivery)";
+      // Create a hidden form and submit it directly to trigger FormSubmit properly
+      const form = document.createElement('form');
+      form.method = 'POST';
+      form.action = 'https://formsubmit.co/saudarjun.orders@gmail.com';
 
-          document.getElementById('payment-section').style.display = 'none';
-          document.getElementById('confirmation-section').style.display = 'block';
-          window.scrollTo(0, 0);
-      })
-      .catch(error => {
-          alert("Something went wrong. Please try again.");
-          document.getElementById('placeOrderBtn').innerText = "Confirm Order";
-      });
+      const data = {
+        Customer_Name: name,
+        Customer_Phone: phone,
+        Delivery_Address: address,
+        Ordered_Item: selectedMaggi,
+        Total_Bill: selectedPrice,
+        Payment_Mode: "Cash on Delivery",
+        _subject: "New Maggi Order from " + name,
+        _next: window.location.href // Wapas aapki website par bhej dega order ke baad
+      };
+
+      for (const key in data) {
+        const input = document.createElement('input');
+        input.type = 'hidden';
+        input.name = key;
+        input.value = data[key];
+        form.appendChild(input);
+      }
+
+      document.body.appendChild(form);
+      form.submit(); // Yeh direct submit karega aur activation link bhejega
     });
   </script>
 </body>
