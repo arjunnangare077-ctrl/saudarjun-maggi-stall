@@ -132,7 +132,7 @@
       color: var(--text-light);
     }
 
-    #payment-section {
+    #payment-section, #confirmation-section {
       display: none; 
       background-color: var(--card-bg);
       border: 1px solid #333;
@@ -140,7 +140,7 @@
       padding: 30px;
       width: 100%;
     }
-    #payment-section h2 {
+    #payment-section h2, #confirmation-section h2 {
       color: var(--primary-gold);
       margin-bottom: 20px;
       text-align: center;
@@ -229,6 +229,14 @@
     .back-btn:hover {
       background-color: #333;
       border-color: #777;
+    }
+    .receipt-box {
+      background-color: #222;
+      padding: 20px;
+      border-radius: 8px;
+      margin-top: 20px;
+      text-align: left;
+      font-size: 1.1rem;
     }
     
     footer {
@@ -329,8 +337,18 @@
         </div>
       </div>
 
-      <button id="placeOrderBtn" class="action-btn">Send Order on WhatsApp</button>
+      <button id="placeOrderBtn" class="action-btn">Confirm Order</button>
       <button id="backBtn" class="action-btn back-btn">⬅ Back to Menu</button>
+    </div>
+
+    <div id="confirmation-section">
+      <h2 style="color: #00ff66;">Order Sent Successfully! 🎉</h2>
+      <p>Your Maggi order has been received by the kitchen.</p>
+      
+      <div class="receipt-box" id="receiptBox">
+        </div>
+      
+      <button onclick="location.reload()" class="action-btn back-btn" style="margin-top: 30px;">Order Another Maggi</button>
     </div>
   </main>
 
@@ -370,7 +388,6 @@
       window.scrollTo(0, 0);
     });
 
-    // NATIVE DIRECT REDIRECTION SYSTEM (Cannot be blocked)
     document.getElementById('placeOrderBtn').addEventListener('click', function() {
       let name = document.getElementById('custName').value;
       let address = document.getElementById('custAddress').value;
@@ -381,16 +398,48 @@
         return;
       }
 
-      // Automatically baked-in from your test details
-      let myWhatsAppNumber = "918169126030"; 
+      // Aapka fixed Web3Forms Access Key yahan inject ho gaya hai
+      const WEB3FORMS_ACCESS_KEY = "f4c6e903-c069-465c-9d09-75e3e226c5ef";
 
-      // Clean WhatsApp formatting
-      let message = `*New Maggi Order!* 🍜%0a%0a*Customer Name:* ${name}%0a*Phone:* ${phone}%0a*Address:* ${address}%0a%0a*Item Ordered:* ${selectedMaggi}%0a*Total Bill:* ${selectedPrice}%0a*Payment:* Cash on Delivery`;
-      
-      document.getElementById('placeOrderBtn').innerText = "Opening WhatsApp...";
-      
-      // Native line redirection that pop-up blockers cannot touch
-      window.location.href = `https://wa.me/${myWhatsAppNumber}?text=${message}`;
+      document.getElementById('placeOrderBtn').innerText = "Sending Order...";
+
+      fetch('https://api.web3forms.com/submit', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+            'Accept': 'application/json'
+        },
+        body: JSON.stringify({
+            access_key: WEB3FORMS_ACCESS_KEY,
+            subject: 'New Maggi Order: ' + name,
+            Name: name,
+            Phone: phone,
+            Address: address,
+            Order: selectedMaggi,
+            Total_Bill: selectedPrice,
+            Payment: 'Cash on Delivery'
+        })
+      })
+      .then(async (response) => {
+          if (response.status == 200) {
+              document.getElementById('receiptBox').innerHTML = 
+                "<strong>Name:</strong> " + name + "<br><br>" +
+                "<strong>Delivery Address:</strong><br>" + address + "<br><br>" +
+                "<strong>Order Details:</strong><br><span style='color: #ffcc00; font-weight: bold;'>" + selectedMaggi + "</span><br><br>" +
+                "<strong>Amount to Pay:</strong> " + selectedPrice + " (Cash on Delivery)";
+
+              document.getElementById('payment-section').style.display = 'none';
+              document.getElementById('confirmation-section').style.display = 'block';
+              window.scrollTo(0, 0);
+          } else {
+              alert("Server busy, please try again.");
+              document.getElementById('placeOrderBtn').innerText = "Confirm Order";
+          }
+      })
+      .catch(error => {
+          alert("Network error, please check your connection.");
+          document.getElementById('placeOrderBtn').innerText = "Confirm Order";
+      });
     });
   </script>
 </body>
