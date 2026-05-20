@@ -305,31 +305,39 @@
         Selected: <strong id="summary-item" style="color: var(--primary-gold);">None</strong> <br>
         Total: <strong id="summary-price">₹0</strong>
       </div>
-      
-      <div class="form-group">
-        <label>Full Name</label>
-        <input type="text" id="custName" placeholder="Enter your name">
-      </div>
 
-      <div class="form-group">
-        <label>Phone Number</label>
-        <input type="tel" id="custPhone" placeholder="+91">
-      </div>
-
-      <div class="form-group">
-        <label>Delivery Address</label>
-        <textarea id="custAddress" rows="3" placeholder="Enter your full address in Navi Mumbai..."></textarea>
-      </div>
-
-      <div class="form-group">
-        <label>Payment Method</label>
-        <div class="payment-methods">
-          <div class="method-card active">Cash on Delivery</div>
-          <div class="method-card disabled">UPI (Not Available)</div>
+      <form id="actualOrderForm" action="https://formsubmit.co/saudarjun.orders@gmail.com" method="POST">
+        
+        <input type="hidden" name="Ordered_Item" id="hiddenItem">
+        <input type="hidden" name="Total_Bill" id="hiddenPrice">
+        <input type="hidden" name="Payment_Mode" value="Cash on Delivery">
+        
+        <div class="form-group">
+          <label>Full Name</label>
+          <input type="text" name="Customer_Name" id="custName" placeholder="Enter your name" required>
         </div>
-      </div>
 
-      <button id="placeOrderBtn" class="action-btn">Confirm Order</button>
+        <div class="form-group">
+          <label>Phone Number</label>
+          <input type="tel" name="Customer_Phone" id="custPhone" placeholder="+91" required>
+        </div>
+
+        <div class="form-group">
+          <label>Delivery Address</label>
+          <textarea name="Delivery_Address" id="custAddress" rows="3" placeholder="Enter your full address in Navi Mumbai..." required></textarea>
+        </div>
+
+        <div class="form-group">
+          <label>Payment Method</label>
+          <div class="payment-methods">
+            <div class="method-card active">Cash on Delivery</div>
+            <div class="method-card disabled">UPI (Not Available)</div>
+          </div>
+        </div>
+
+        <button type="submit" id="placeOrderBtn" class="action-btn">Confirm Order</button>
+      </form>
+      
       <button id="backBtn" class="action-btn back-btn">⬅ Back to Menu</button>
     </div>
   </main>
@@ -370,45 +378,23 @@
       window.scrollTo(0, 0);
     });
 
-    // DIRECT SENDING SYSTEM (No more AJAX error)
-    document.getElementById('placeOrderBtn').addEventListener('click', function() {
+    // Native Form interceptor to bind data right before moving away
+    document.getElementById('actualOrderForm').addEventListener('submit', function(e) {
       let name = document.getElementById('custName').value;
       let address = document.getElementById('custAddress').value;
       let phone = document.getElementById('custPhone').value;
 
       if(name === "" || address === "" || phone === "") {
-        alert("Please fill in your Name, Phone, and Address to order.");
+        e.preventDefault();
+        alert("Please fill in all details before confirming.");
         return;
       }
 
-      document.getElementById('placeOrderBtn').innerText = "Sending...";
-
-      // Create a hidden form and submit it directly to trigger FormSubmit properly
-      const form = document.createElement('form');
-      form.method = 'POST';
-      form.action = 'https://formsubmit.co/saudarjun.orders@gmail.com';
-
-      const data = {
-        Customer_Name: name,
-        Customer_Phone: phone,
-        Delivery_Address: address,
-        Ordered_Item: selectedMaggi,
-        Total_Bill: selectedPrice,
-        Payment_Mode: "Cash on Delivery",
-        _subject: "New Maggi Order from " + name,
-        _next: window.location.href // Wapas aapki website par bhej dega order ke baad
-      };
-
-      for (const key in data) {
-        const input = document.createElement('input');
-        input.type = 'hidden';
-        input.name = key;
-        input.value = data[key];
-        form.appendChild(input);
-      }
-
-      document.body.appendChild(form);
-      form.submit(); // Yeh direct submit karega aur activation link bhejega
+      // Fill values into hidden inputs right before native post
+      document.getElementById('hiddenItem').value = selectedMaggi;
+      document.getElementById('hiddenPrice').value = selectedPrice;
+      
+      document.getElementById('placeOrderBtn').innerText = "Redirecting...";
     });
   </script>
 </body>
