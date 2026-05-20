@@ -56,7 +56,9 @@
       width: 100%;
       max-width: 800px;
     }
-    .menu-section {
+    
+    /* --- MENU SECTION --- */
+    #menu-section {
       display: flex;
       flex-direction: column;
       gap: 20px;
@@ -70,7 +72,6 @@
       align-items: center;
       gap: 20px;
       transition: all 0.3s ease-in-out;
-      cursor: pointer;
     }
     .menu-item:hover {
       background-color: var(--card-hover);
@@ -124,23 +125,81 @@
       font-weight: 900;
       color: var(--text-light);
     }
-    .find-us-btn {
+
+    /* --- PAYMENT SECTION (HIDDEN BY DEFAULT) --- */
+    #payment-section {
+      display: none; 
+      background-color: var(--card-bg);
+      border: 1px solid var(--primary-gold);
+      border-radius: 12px;
+      padding: 30px;
+      width: 100%;
+    }
+    #payment-section h2 {
+      color: var(--primary-gold);
+      margin-bottom: 20px;
+      text-align: center;
+    }
+    .form-group {
+      margin-bottom: 20px;
+    }
+    .form-group label {
+      display: block;
+      color: var(--text-light);
+      margin-bottom: 8px;
+      font-weight: bold;
+    }
+    .form-group input, .form-group textarea {
+      width: 100%;
+      padding: 12px;
+      background-color: #222;
+      border: 1px solid #444;
+      color: white;
+      border-radius: 6px;
+      font-size: 1rem;
+    }
+    .form-group input:focus, .form-group textarea:focus {
+      outline: none;
+      border-color: var(--primary-gold);
+    }
+    .payment-methods {
+      display: flex;
+      gap: 15px;
+      margin-top: 10px;
+    }
+    .method-card {
+      flex: 1;
+      background-color: #222;
+      border: 1px solid #444;
+      padding: 15px;
+      text-align: center;
+      border-radius: 6px;
+      cursor: pointer;
+      font-weight: bold;
+    }
+    .method-card:hover {
+      border-color: var(--primary-gold);
+    }
+
+    /* --- BUTTONS --- */
+    .action-btn {
       display: block;
       width: 100%;
       background-color: var(--primary-gold);
       color: var(--bg-dark);
       text-align: center;
       padding: 15px 30px;
-      margin-top: 40px;
+      margin-top: 30px;
       border-radius: 8px;
       font-weight: 800;
       text-transform: uppercase;
       letter-spacing: 2px;
-      text-decoration: none;
+      border: none;
+      cursor: pointer;
       transition: background-color 0.2s ease;
       font-size: 1.2rem;
     }
-    .find-us-btn:hover {
+    .action-btn:hover {
       background-color: #e6b800;
     }
     footer {
@@ -158,7 +217,7 @@
   </header>
   
   <main>
-    <div class="menu-section">
+    <div id="menu-section">
       
       <div class="menu-item">
         <div class="item-image-area">
@@ -211,7 +270,7 @@
       <div class="menu-item">
         <div class="item-image-area">
           <span class="tag-label">SAUDARJUN</span>
-          <img src="https://images.unsplash.com/photo-1569718212165-3a8278d5f624?auto=format&fit=crop&w=300&q=80" alt="Paneer Maggi">
+          <img src="https://images.unsplash.com/photo-1598515573423-8106a72e8fa4?auto=format&fit=crop&w=300&q=80" alt="Paneer Maggi">
         </div>
         <div class="item-details">
           <h3>Paneer Butter Maggi</h3>
@@ -220,13 +279,52 @@
         <div class="item-price">₹90</div>
       </div>
 
+      <button id="nextBtn" class="action-btn">Next ➔</button>
     </div>
 
-    <a href="#" class="find-us-btn">Find Our Stall Now</a>
+    <div id="payment-section">
+      <h2>Delivery Details</h2>
+      
+      <div class="form-group">
+        <label>Full Name</label>
+        <input type="text" placeholder="Enter your name">
+      </div>
+
+      <div class="form-group">
+        <label>Phone Number</label>
+        <input type="tel" placeholder="+91">
+      </div>
+
+      <div class="form-group">
+        <label>Delivery Address</label>
+        <textarea rows="3" placeholder="Enter your full address in Navi Mumbai..."></textarea>
+      </div>
+
+      <div class="form-group">
+        <label>Select Payment Method</label>
+        <div class="payment-methods">
+          <div class="method-card">Cash on Delivery</div>
+          <div class="method-card">UPI / GPay</div>
+        </div>
+      </div>
+
+      <button class="action-btn">Place Order</button>
+    </div>
   </main>
 
   <footer>
     Serving delicious Maggi every single day!
   </footer>
+
+  <script>
+    document.getElementById('nextBtn').addEventListener('click', function() {
+      // Hide the menu
+      document.getElementById('menu-section').style.display = 'none';
+      // Show the payment section
+      document.getElementById('payment-section').style.display = 'block';
+      // Scroll to the top
+      window.scrollTo(0, 0);
+    });
+  </script>
 </body>
 </html>
