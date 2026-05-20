@@ -3,126 +3,216 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Saudarjun Maggi Stall | Navi Mumbai</title>
+  <title>Saudarjun Maggi Stall | Exclusive Menu</title>
   <style>
     :root {
-      --bg-dark: #121212;
-      --card-bg: #1e1e1e;
+      --bg-dark: #0a0a0a;
+      --card-bg: #141414;
+      --card-hover: #1e1e1e;
       --primary-gold: #ffcc00;
       --text-light: #ffffff;
-      --text-muted: #a0a0a0;
+      --text-muted: #888888;
+      --tag-bg: #2a2a2a;
     }
     * {
       margin: 0;
       padding: 0;
       box-sizing: border-box;
-      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      font-family: 'Montserrat', 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
     }
     body {
       background-color: var(--bg-dark);
       color: var(--text-light);
       line-height: 1.6;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      min-height: 100vh;
     }
     header {
       text-align: center;
-      padding: 40px 20px;
-      background: linear-gradient(180deg, #222 0%, var(--bg-dark) 100%);
-      border-bottom: 1px solid #333;
+      padding: 60px 20px;
+      width: 100%;
+      max-width: 800px;
+      background: linear-gradient(180deg, #1a1a1a 0%, var(--bg-dark) 100%);
+      border-bottom: 2px solid var(--primary-gold);
     }
     .stall-name {
-      font-size: 2.5rem;
+      font-size: 2.8rem;
       text-transform: uppercase;
-      letter-spacing: 2px;
-      font-weight: 800;
+      letter-spacing: 3px;
+      font-weight: 900;
+      display: flex;
+      justify-content: center;
+      align-items: center;
     }
     .stall-name span {
       color: var(--primary-gold);
     }
-    .location {
+    .owner-name {
       color: var(--text-muted);
-      font-size: 1rem;
-      margin-top: 5px;
+      font-size: 1.2rem;
+      margin-top: 10px;
+      font-style: italic;
     }
     main {
       padding: 40px 20px;
-      max-width: 600px;
-      margin: 0 auto;
+      width: 100%;
+      max-width: 800px;
+    }
+    .menu-section {
+      display: flex;
+      flex-direction: column;
+      gap: 20px;
     }
     .menu-item {
       background-color: var(--card-bg);
-      margin-bottom: 15px;
+      border: 1px solid #222;
+      border-radius: 12px;
       padding: 20px;
-      border-radius: 8px;
       display: flex;
-      justify-content: space-between;
       align-items: center;
-      border: 1px solid #333;
+      gap: 20px;
+      transition: all 0.3s ease-in-out;
+      cursor: pointer;
+    }
+    .menu-item:hover {
+      background-color: var(--card-hover);
+      border-color: var(--primary-gold);
+      transform: translateY(-3px);
+      box-shadow: 0 5px 15px rgba(255, 204, 0, 0.1);
+    }
+    /* --- NEW Image with TAG style --- */
+    .item-image-area {
+      position: relative;
+      flex-shrink: 0;
+      width: 120px;
+      height: 120px;
+      background-color: #222;
+      border-radius: 8px;
+      overflow: hidden;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
+    .image-placeholder {
+      font-size: 0.8rem;
+      color: var(--text-muted);
+      text-align: center;
+      padding: 10px;
+    }
+    .tag-label {
+      position: absolute;
+      top: 5px;
+      left: 5px;
+      background-color: var(--primary-gold);
+      color: var(--bg-dark);
+      padding: 2px 8px;
+      font-size: 0.7rem;
+      font-weight: bold;
+      border-radius: 4px;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+    }
+    .item-details {
+      flex-grow: 1;
     }
     .item-details h3 {
       color: var(--primary-gold);
-      font-size: 1.2rem;
+      font-size: 1.3rem;
+      font-weight: 700;
     }
     .item-details p {
       color: var(--text-muted);
       font-size: 0.9rem;
-      margin-top: 4px;
+      margin-top: 5px;
     }
-    .price {
-      font-size: 1.2rem;
-      font-weight: bold;
+    .item-price {
+      font-size: 1.4rem;
+      font-weight: 900;
       color: var(--text-light);
+      white-space: nowrap;
+    }
+    /* --- NEW CLICKABLE BUTTON style --- */
+    .find-us-btn {
+      display: block;
+      width: 100%;
+      background-color: var(--primary-gold);
+      color: var(--bg-dark);
+      text-align: center;
+      padding: 15px 30px;
+      margin-top: 40px;
+      border-radius: 8px;
+      font-weight: 800;
+      text-transform: uppercase;
+      letter-spacing: 2px;
+      text-decoration: none;
+      transition: background-color 0.2s ease;
+      font-size: 1.2rem;
+    }
+    .find-us-btn:hover {
+      background-color: #e6b800;
     }
     footer {
       text-align: center;
-      padding: 20px;
+      padding: 30px;
       color: var(--text-muted);
       font-size: 0.8rem;
-      margin-top: 20px;
+      width: 100%;
     }
   </style>
 </head>
 <body>
   <header>
     <div class="stall-name">Saudarjun <span>Maggi Stall</span></div>
-    <div class="location">Serving the best Maggi in Navi Mumbai</div>
+    <div class="owner-name">Navi Mumbai's Finest | Since 2023</div>
   </header>
   
   <main>
-    <div class="menu-item">
-      <div class="item-details">
-        <h3>Classic Masala Maggi</h3>
-        <p>The original favorite</p>
+    <div class="menu-section">
+      
+      <div class="menu-item">
+        <div class="item-image-area">
+          <span class="tag-label">SAUDARJUN</span>
+          <div class="image-placeholder">UPLOAD AI POSTER HERE</div>
+        </div>
+        <div class="item-details">
+          <h3>Classic Masala Maggi</h3>
+          <p>The original favorite, cooked just right.</p>
+        </div>
+        <div class="item-price">₹50</div>
       </div>
-      <div class="price">₹50</div>
-    </div>
-    
-    <div class="menu-item">
-      <div class="item-details">
-        <h3>Cheese Burst Maggi</h3>
-        <p>Loaded with double cheese</p>
+      
+      <div class="menu-item">
+        <div class="item-image-area">
+          <span class="tag-label">SAUDARJUN</span>
+          <div class="image-placeholder">UPLOAD AI POSTER HERE</div>
+        </div>
+        <div class="item-details">
+          <h3>Cheese Burst Maggi</h3>
+          <p>Double cheese for a rich experience.</p>
+        </div>
+        <div class="item-price">₹70</div>
       </div>
-      <div class="price">₹70</div>
+
+      <div class="menu-item">
+        <div class="item-image-area">
+          <span class="tag-label">SAUDARJUN</span>
+          <div class="image-placeholder">UPLOAD AI POSTER HERE</div>
+        </div>
+        <div class="item-details">
+          <h3>Spicy Tadka Maggi</h3>
+          <p>Extra spices and chili for those who dare.</p>
+        </div>
+        <div class="item-price">₹60</div>
+      </div>
     </div>
 
-    <div class="menu-item">
-      <div class="item-details">
-        <h3>Spicy Tadka Maggi</h3>
-        <p>Extra spicy with garlic and chili</p>
-      </div>
-      <div class="price">₹60</div>
-    </div>
-
-    <div class="menu-item">
-      <div class="item-details">
-        <h3>Paneer Tikka Maggi</h3>
-        <p>Roasted paneer chunks</p>
-      </div>
-      <div class="price">₹90</div>
-    </div>
+    <a href="#" class="find-us-btn">Find Our Stall Now</a>
   </main>
 
   <footer>
-    Open Daily
+    Serving delicious Maggi every single day!
   </footer>
 </body>
 </html>
