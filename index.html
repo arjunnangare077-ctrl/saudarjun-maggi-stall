@@ -1,1 +1,84 @@
-
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Saudarjun Maggi Stall | Exclusive Menu</title>
+  <style>
+    :root {
+      --bg-dark: #0f0f0f;
+      --card-bg: #1a1a1a;
+      --primary-gold: #ffcc00;
+      --text-light: #ffffff;
+      --text-muted: #888888;
+    }
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    }
+    body {
+      background-color: var(--bg-dark);
+      color: var(--text-light);
+      line-height: 1.6;
+    }
+    header {
+      text-align: center;
+      padding: 40px 20px;
+      background: linear-gradient(180deg, #2a2a2a 0%, var(--bg-dark) 100%);
+      border-bottom: 2px solid var(--primary-gold);
+    }
+    .stall-name {
+      font-size: 2.5rem;
+      text-transform: uppercase;
+      letter-spacing: 2px;
+      font-weight: 800;
+    }
+    .stall-name span {
+      color: var(--primary-gold);
+    }
+    .owner-name {
+      color: var(--text-muted);
+      font-size: 1.1rem;
+      margin-top: 5px;
+      font-style: italic;
+    }
+    main {
+      padding: 40px 20px;
+      max-width: 800px;
+      margin: 0 auto;
+      text-align: center;
+    }
+    .menu-item {
+      background-color: var(--card-bg);
+      margin: 20px 0;
+      padding: 20px;
+      border-radius: 8px;
+      border: 1px solid #333;
+    }
+    .menu-item h3 {
+      color: var(--primary-gold);
+      margin-bottom: 10px;
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <div class="stall-name">Saudarjun <span>Maggi Stall</span></div>
+    <div class="owner-name">Exclusive Menu</div>
+  </header>
+  
+  <main>
+    <div class="menu-item">
+      <h3>Classic Masala Maggi</h3>
+      <p>The original favorite, cooked to perfection.</p>
+    </div>
+    
+    <div class="menu-item">
+      <h3>Cheese Burst Maggi</h3>
+      <p>Loaded with double cheese and secret spices.</p>
+    </div>
+  </main>
+</body>
+</html>
