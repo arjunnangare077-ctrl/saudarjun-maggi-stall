@@ -162,7 +162,6 @@
       margin-bottom: 8px;
       font-weight: bold;
     }
-    /* Updated CSS for Select Dropdown */
     .form-group input, .form-group textarea, .form-group select {
       width: 100%;
       padding: 12px;
@@ -225,6 +224,11 @@
     }
     .action-btn:hover {
       background-color: #e6b800;
+    }
+    .action-btn:disabled {
+      background-color: #555;
+      color: #888;
+      cursor: not-allowed;
     }
     .back-btn {
       background-color: transparent;
@@ -331,17 +335,20 @@
       </div>
 
       <div class="form-group">
-        <label>City / Delivery Area</label>
-        <select id="custArea" required>
-          <option value="" disabled selected>-- Select your Area --</option>
-          <option value="Kopar Khairane">Kopar Khairane</option>
-          <option value="Vashi">Vashi</option>
-          <option value="Ghansoli">Ghansoli</option>
-          <option value="Airoli">Airoli</option>
-          <option value="Nerul">Nerul</option>
-          <option value="Sanpada">Sanpada</option>
-          <option value="Juinagar">Juinagar</option>
-          <option value="Other Navi Mumbai">Other (Navi Mumbai)</option>
+        <label>State</label>
+        <select id="custState" required>
+          <option value="" disabled selected>-- Select your State --</option>
+          <option value="Maharashtra">Maharashtra</option>
+          <option value="Delhi">Delhi</option>
+          <option value="Gujarat">Gujarat</option>
+          <option value="Karnataka">Karnataka</option>
+        </select>
+      </div>
+
+      <div class="form-group">
+        <label>City</label>
+        <select id="custCity" required disabled>
+          <option value="" disabled selected>-- Select State First --</option>
         </select>
       </div>
 
@@ -381,6 +388,35 @@
     let selectedMaggi = "";
     let selectedPrice = "";
 
+    // Data for States and Cities
+    const locationData = {
+      "Maharashtra": ["Navi Mumbai", "Mumbai", "Pune", "Thane", "Nagpur", "Nashik"],
+      "Delhi": ["New Delhi", "North Delhi", "South Delhi", "East Delhi", "West Delhi"],
+      "Gujarat": ["Ahmedabad", "Surat", "Vadodara", "Rajkot", "Gandhinagar"],
+      "Karnataka": ["Bengaluru", "Mysuru", "Mangaluru", "Hubli"]
+    };
+
+    // Handle State Change to populate Cities
+    document.getElementById('custState').addEventListener('change', function() {
+      const state = this.value;
+      const cityDropdown = document.getElementById('custCity');
+      
+      // Reset City dropdown
+      cityDropdown.innerHTML = '<option value="" disabled selected>-- Select your City --</option>';
+      
+      if(state && locationData[state]) {
+        locationData[state].forEach(city => {
+          let option = document.createElement('option');
+          option.value = city;
+          option.innerText = city;
+          cityDropdown.appendChild(option);
+        });
+        cityDropdown.disabled = false;
+      } else {
+        cityDropdown.disabled = true;
+      }
+    });
+
     const items = document.querySelectorAll('.menu-item');
     items.forEach(item => {
       item.addEventListener('click', function() {
@@ -412,12 +448,13 @@
     document.getElementById('placeOrderBtn').addEventListener('click', function() {
       let name = document.getElementById('custName').value.trim();
       let phone = document.getElementById('custPhone').value.trim();
-      let area = document.getElementById('custArea').value;
+      let state = document.getElementById('custState').value;
+      let city = document.getElementById('custCity').value;
       let exactAddress = document.getElementById('custAddress').value.trim();
 
       // Empty Validation
-      if(name === "" || phone === "" || area === "" || exactAddress === "") {
-        alert("Please fill in all the details, including selecting your Area.");
+      if(name === "" || phone === "" || state === "" || city === "" || exactAddress === "") {
+        alert("Please fill in all the details, including your State and City.");
         return;
       }
 
@@ -435,18 +472,19 @@
         return;
       }
 
-      // Exact Address Limit (Shorter limit now since Area is separate)
+      // Exact Address Limit 
       if (exactAddress.length < 5) {
-        alert("Please enter your exact Room and Sector details.");
+        alert("Please enter your exact Room, Building, and Sector details.");
         return;
       }
 
       // Combined Full Address
-      let finalFullAddress = exactAddress + ", " + area + ", Navi Mumbai";
+      let finalFullAddress = exactAddress + ", " + city + ", " + state;
 
       const WEB3FORMS_ACCESS_KEY = "f4c6e903-c069-465c-9d09-75e3e226c5ef";
 
       document.getElementById('placeOrderBtn').innerText = "Sending Order...";
+      document.getElementById('placeOrderBtn').disabled = true;
 
       const formData = new FormData();
       formData.append("access_key", WEB3FORMS_ACCESS_KEY);
@@ -476,11 +514,13 @@
           } else {
               alert("Server busy, please try again.");
               document.getElementById('placeOrderBtn').innerText = "Confirm Order";
+              document.getElementById('placeOrderBtn').disabled = false;
           }
       })
       .catch(error => {
           alert("Network error, please check your connection.");
           document.getElementById('placeOrderBtn').innerText = "Confirm Order";
+          document.getElementById('placeOrderBtn').disabled = false;
       });
     });
   </script>
