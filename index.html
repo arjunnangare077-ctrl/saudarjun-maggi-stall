@@ -316,17 +316,17 @@
 
       <div class="form-group">
         <label>Full Name</label>
-        <input type="text" id="custName" placeholder="Enter your name" required>
+        <input type="text" id="custName" placeholder="Enter your real name" required>
       </div>
 
       <div class="form-group">
         <label>Phone Number</label>
-        <input type="tel" id="custPhone" placeholder="+91" required>
+        <input type="tel" id="custPhone" placeholder="10-digit mobile number" maxlength="10" required>
       </div>
 
       <div class="form-group">
         <label>Delivery Address</label>
-        <textarea id="custAddress" rows="3" placeholder="Enter your full address in Navi Mumbai..." required></textarea>
+        <textarea id="custAddress" rows="3" placeholder="Enter complete address (Flat, Building, Sector, Area...)" required></textarea>
       </div>
 
       <div class="form-group">
@@ -389,36 +389,53 @@
     });
 
     document.getElementById('placeOrderBtn').addEventListener('click', function() {
-      let name = document.getElementById('custName').value;
-      let address = document.getElementById('custAddress').value;
-      let phone = document.getElementById('custPhone').value;
+      let name = document.getElementById('custName').value.trim();
+      let address = document.getElementById('custAddress').value.trim();
+      let phone = document.getElementById('custPhone').value.trim();
 
+      // 1. Basic Empty Validation
       if(name === "" || address === "" || phone === "") {
-        alert("Please fill in all details before confirming.");
+        alert("Please fill in all the details.");
         return;
       }
 
-      // Aapka fixed Web3Forms Access Key yahan inject ho gaya hai
+      // 2. Strict Name Validation (Only Letters and Spaces allowed)
+      let namePattern = /^[a-zA-Z\s]+$/;
+      if (!namePattern.test(name) || name.length < 3) {
+        alert("Please enter a valid Full Name (Letters only, minimum 3 characters).");
+        return;
+      }
+
+      // 3. Strict Phone Number Validation (Exactly 10 Digits, starting with 6-9)
+      let phonePattern = /^[6-9]\d{9}$/;
+      if (!phonePattern.test(phone)) {
+        alert("Please enter a valid 10-digit Indian mobile number (Numbers only, no spaces or +91).");
+        return;
+      }
+
+      // 4. Strict Address Validation (Minimum 15 characters to avoid fake/short inputs)
+      if (address.length < 15) {
+        alert("Please provide a complete address (Minimum 15 characters, including building name/sector).");
+        return;
+      }
+
       const WEB3FORMS_ACCESS_KEY = "f4c6e903-c069-465c-9d09-75e3e226c5ef";
 
       document.getElementById('placeOrderBtn').innerText = "Sending Order...";
 
+      const formData = new FormData();
+      formData.append("access_key", WEB3FORMS_ACCESS_KEY);
+      formData.append("subject", "New Maggi Order: " + name);
+      formData.append("Customer Name", name);
+      formData.append("Phone Number", phone);
+      formData.append("Delivery Address", address);
+      formData.append("Selected Maggi", selectedMaggi);
+      formData.append("Total Price", selectedPrice);
+      formData.append("Payment Mode", "Cash on Delivery");
+
       fetch('https://api.web3forms.com/submit', {
         method: 'POST',
-        headers: {
-            'Content-Type': 'application/json',
-            'Accept': 'application/json'
-        },
-        body: JSON.stringify({
-            access_key: WEB3FORMS_ACCESS_KEY,
-            subject: 'New Maggi Order: ' + name,
-            Name: name,
-            Phone: phone,
-            Address: address,
-            Order: selectedMaggi,
-            Total_Bill: selectedPrice,
-            Payment: 'Cash on Delivery'
-        })
+        body: formData
       })
       .then(async (response) => {
           if (response.status == 200) {
