@@ -162,7 +162,8 @@
       margin-bottom: 8px;
       font-weight: bold;
     }
-    .form-group input, .form-group textarea {
+    /* Updated CSS for Select Dropdown */
+    .form-group input, .form-group textarea, .form-group select {
       width: 100%;
       padding: 12px;
       background-color: #222;
@@ -171,10 +172,15 @@
       border-radius: 6px;
       font-size: 1rem;
     }
-    .form-group input:focus, .form-group textarea:focus {
+    .form-group input:focus, .form-group textarea:focus, .form-group select:focus {
       outline: none;
       border-color: var(--primary-gold);
     }
+    .form-group select option {
+      background-color: #222;
+      color: white;
+    }
+    
     .payment-methods {
       display: flex;
       gap: 15px;
@@ -325,8 +331,23 @@
       </div>
 
       <div class="form-group">
-        <label>Delivery Address</label>
-        <textarea id="custAddress" rows="3" placeholder="Enter complete address (Flat, Building, Sector, Area...)" required></textarea>
+        <label>City / Delivery Area</label>
+        <select id="custArea" required>
+          <option value="" disabled selected>-- Select your Area --</option>
+          <option value="Kopar Khairane">Kopar Khairane</option>
+          <option value="Vashi">Vashi</option>
+          <option value="Ghansoli">Ghansoli</option>
+          <option value="Airoli">Airoli</option>
+          <option value="Nerul">Nerul</option>
+          <option value="Sanpada">Sanpada</option>
+          <option value="Juinagar">Juinagar</option>
+          <option value="Other Navi Mumbai">Other (Navi Mumbai)</option>
+        </select>
+      </div>
+
+      <div class="form-group">
+        <label>Exact Address details</label>
+        <textarea id="custAddress" rows="2" placeholder="Room/Flat No, Building Name, Sector..." required></textarea>
       </div>
 
       <div class="form-group">
@@ -390,34 +411,38 @@
 
     document.getElementById('placeOrderBtn').addEventListener('click', function() {
       let name = document.getElementById('custName').value.trim();
-      let address = document.getElementById('custAddress').value.trim();
       let phone = document.getElementById('custPhone').value.trim();
+      let area = document.getElementById('custArea').value;
+      let exactAddress = document.getElementById('custAddress').value.trim();
 
-      // 1. Basic Empty Validation
-      if(name === "" || address === "" || phone === "") {
-        alert("Please fill in all the details.");
+      // Empty Validation
+      if(name === "" || phone === "" || area === "" || exactAddress === "") {
+        alert("Please fill in all the details, including selecting your Area.");
         return;
       }
 
-      // 2. Strict Name Validation (Only Letters and Spaces allowed)
+      // Name Validation
       let namePattern = /^[a-zA-Z\s]+$/;
       if (!namePattern.test(name) || name.length < 3) {
-        alert("Please enter a valid Full Name (Letters only, minimum 3 characters).");
+        alert("Please enter a valid Full Name (Letters only).");
         return;
       }
 
-      // 3. Strict Phone Number Validation (Exactly 10 Digits, starting with 6-9)
+      // Phone Validation
       let phonePattern = /^[6-9]\d{9}$/;
       if (!phonePattern.test(phone)) {
-        alert("Please enter a valid 10-digit Indian mobile number (Numbers only, no spaces or +91).");
+        alert("Please enter a valid 10-digit mobile number.");
         return;
       }
 
-      // 4. Strict Address Validation (Minimum 15 characters to avoid fake/short inputs)
-      if (address.length < 15) {
-        alert("Please provide a complete address (Minimum 15 characters, including building name/sector).");
+      // Exact Address Limit (Shorter limit now since Area is separate)
+      if (exactAddress.length < 5) {
+        alert("Please enter your exact Room and Sector details.");
         return;
       }
+
+      // Combined Full Address
+      let finalFullAddress = exactAddress + ", " + area + ", Navi Mumbai";
 
       const WEB3FORMS_ACCESS_KEY = "f4c6e903-c069-465c-9d09-75e3e226c5ef";
 
@@ -428,7 +453,7 @@
       formData.append("subject", "New Maggi Order: " + name);
       formData.append("Customer Name", name);
       formData.append("Phone Number", phone);
-      formData.append("Delivery Address", address);
+      formData.append("Delivery Address", finalFullAddress);
       formData.append("Selected Maggi", selectedMaggi);
       formData.append("Total Price", selectedPrice);
       formData.append("Payment Mode", "Cash on Delivery");
@@ -441,7 +466,7 @@
           if (response.status == 200) {
               document.getElementById('receiptBox').innerHTML = 
                 "<strong>Name:</strong> " + name + "<br><br>" +
-                "<strong>Delivery Address:</strong><br>" + address + "<br><br>" +
+                "<strong>Delivery Address:</strong><br>" + finalFullAddress + "<br><br>" +
                 "<strong>Order Details:</strong><br><span style='color: #ffcc00; font-weight: bold;'>" + selectedMaggi + "</span><br><br>" +
                 "<strong>Amount to Pay:</strong> " + selectedPrice + " (Cash on Delivery)";
 
