@@ -154,11 +154,6 @@
       border: 1px dashed var(--primary-gold);
     }
     
-    .form-group {
-      margin-bottom: 20px;
-    }
-    
-    /* NEW CSS FOR SIDE-BY-SIDE DROPDOWNS */
     .split-group {
       display: flex;
       gap: 15px;
@@ -168,7 +163,9 @@
       flex: 1;
       margin-bottom: 0;
     }
-
+    .form-group {
+      margin-bottom: 20px;
+    }
     .form-group label {
       display: block;
       color: var(--text-light);
@@ -260,6 +257,7 @@
       margin-top: 20px;
       text-align: left;
       font-size: 1.1rem;
+      border: 1px dashed var(--primary-gold);
     }
     
     footer {
@@ -371,8 +369,8 @@
       <div class="form-group">
         <label>Payment Method</label>
         <div class="payment-methods">
-          <div class="method-card active">Cash on Delivery</div>
-          <div class="method-card disabled">UPI (Not Available)</div>
+          <div class="method-card active">Pay at Stall (Cash/UPI)</div>
+          <div class="method-card disabled">Online Payment (Coming Soon)</div>
         </div>
       </div>
 
@@ -382,12 +380,12 @@
 
     <div id="confirmation-section">
       <h2 style="color: #00ff66;">Order Sent Successfully! 🎉</h2>
-      <p>Your Maggi order has been received by the kitchen.</p>
+      <p>Please show this digital token at the stall to collect your order and pay.</p>
       
       <div class="receipt-box" id="receiptBox">
         </div>
       
-      <button onclick="location.reload()" class="action-btn back-btn" style="margin-top: 30px;">Order Another Maggi</button>
+      <button onclick="location.reload()" class="action-btn back-btn" style="margin-top: 30px;">Place Another Order</button>
     </div>
   </main>
 
@@ -538,21 +536,24 @@
 
       let finalFullAddress = exactAddress + ", " + city + ", " + state;
 
-      // Your Web3Forms Access Key is active here
+      // Token Generator (3 digits)
+      let tokenNumber = Math.floor(100 + Math.random() * 900);
+
       const WEB3FORMS_ACCESS_KEY = "f4c6e903-c069-465c-9d09-75e3e226c5ef";
 
-      document.getElementById('placeOrderBtn').innerText = "Sending Order...";
+      document.getElementById('placeOrderBtn').innerText = "Generating Token...";
       document.getElementById('placeOrderBtn').disabled = true;
 
       const formData = new FormData();
       formData.append("access_key", WEB3FORMS_ACCESS_KEY);
-      formData.append("subject", "New Maggi Order: " + name);
+      formData.append("subject", "Order Token #" + tokenNumber + " | " + name);
+      formData.append("Token Number", "#" + tokenNumber);
       formData.append("Customer Name", name);
       formData.append("Phone Number", phone);
       formData.append("Delivery Address", finalFullAddress);
       formData.append("Selected Maggi", selectedMaggi);
       formData.append("Total Price", selectedPrice);
-      formData.append("Payment Mode", "Cash on Delivery");
+      formData.append("Payment Mode", "Pay at Stall (Cash/UPI)");
 
       fetch('https://api.web3forms.com/submit', {
         method: 'POST',
@@ -560,11 +561,16 @@
       })
       .then(async (response) => {
           if (response.status == 200) {
-              document.getElementById('receiptBox').innerHTML = 
-                "<strong>Name:</strong> " + name + "<br><br>" +
-                "<strong>Delivery Address:</strong><br>" + finalFullAddress + "<br><br>" +
-                "<strong>Order Details:</strong><br><span style='color: #ffcc00; font-weight: bold;'>" + selectedMaggi + "</span><br><br>" +
-                "<strong>Amount to Pay:</strong> " + selectedPrice + " (Cash on Delivery)";
+              // Digital Receipt Design
+              document.getElementById('receiptBox').innerHTML = `
+                <div style="text-align: center; border-bottom: 2px dashed #444; padding-bottom: 15px; margin-bottom: 15px;">
+                   <h3 style="color: var(--text-light); margin-bottom: 5px; font-size: 1rem;">YOUR ORDER TOKEN</h3>
+                   <div style="font-size: 3rem; color: var(--primary-gold); font-weight: 900; letter-spacing: 2px;">#${tokenNumber}</div>
+                </div>
+                <strong>Name:</strong> ${name} <br><br>
+                <strong>Order Item:</strong> <span style="color: var(--primary-gold);">${selectedMaggi}</span> <br><br>
+                <strong>Total Amount:</strong> <span style="font-size: 1.2rem; color: #fff;">${selectedPrice}</span>
+              `;
 
               document.getElementById('payment-section').style.display = 'none';
               document.getElementById('confirmation-section').style.display = 'block';
