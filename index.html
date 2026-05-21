@@ -153,9 +153,22 @@
       text-align: center;
       border: 1px dashed var(--primary-gold);
     }
+    
     .form-group {
       margin-bottom: 20px;
     }
+    
+    /* NEW CSS FOR SIDE-BY-SIDE DROPDOWNS */
+    .split-group {
+      display: flex;
+      gap: 15px;
+      margin-bottom: 20px;
+    }
+    .split-group .form-group {
+      flex: 1;
+      margin-bottom: 0;
+    }
+
     .form-group label {
       display: block;
       color: var(--text-light);
@@ -334,27 +347,25 @@
         <input type="tel" id="custPhone" placeholder="10-digit mobile number" maxlength="10" required>
       </div>
 
-      <div class="form-group">
-        <label>State</label>
-        <select id="custState" required>
-          <option value="" disabled selected>-- Select your State --</option>
-          <option value="Maharashtra">Maharashtra</option>
-          <option value="Delhi">Delhi</option>
-          <option value="Gujarat">Gujarat</option>
-          <option value="Karnataka">Karnataka</option>
-        </select>
-      </div>
+      <div class="split-group">
+        <div class="form-group">
+          <label>State</label>
+          <select id="custState" required>
+            <option value="" disabled selected>-- Select State --</option>
+            </select>
+        </div>
 
-      <div class="form-group">
-        <label>City</label>
-        <select id="custCity" required disabled>
-          <option value="" disabled selected>-- Select State First --</option>
-        </select>
+        <div class="form-group">
+          <label>City / District</label>
+          <select id="custCity" required disabled>
+            <option value="" disabled selected>-- Select State First --</option>
+          </select>
+        </div>
       </div>
 
       <div class="form-group">
         <label>Exact Address details</label>
-        <textarea id="custAddress" rows="2" placeholder="Room/Flat No, Building Name, Sector..." required></textarea>
+        <textarea id="custAddress" rows="2" placeholder="Room/Flat No, Building Name, Sector, Landmark..." required></textarea>
       </div>
 
       <div class="form-group">
@@ -388,21 +399,61 @@
     let selectedMaggi = "";
     let selectedPrice = "";
 
-    // Data for States and Cities
+    // ALL INDIA STATES AND CITIES DATA
     const locationData = {
-      "Maharashtra": ["Navi Mumbai", "Mumbai", "Pune", "Thane", "Nagpur", "Nashik"],
-      "Delhi": ["New Delhi", "North Delhi", "South Delhi", "East Delhi", "West Delhi"],
-      "Gujarat": ["Ahmedabad", "Surat", "Vadodara", "Rajkot", "Gandhinagar"],
-      "Karnataka": ["Bengaluru", "Mysuru", "Mangaluru", "Hubli"]
+      "Andaman and Nicobar": ["Port Blair", "Other"],
+      "Andhra Pradesh": ["Visakhapatnam", "Vijayawada", "Guntur", "Nellore", "Other"],
+      "Arunachal Pradesh": ["Itanagar", "Other"],
+      "Assam": ["Guwahati", "Silchar", "Dibrugarh", "Other"],
+      "Bihar": ["Patna", "Gaya", "Bhagalpur", "Muzaffarpur", "Other"],
+      "Chandigarh": ["Chandigarh"],
+      "Chhattisgarh": ["Raipur", "Bhilai", "Bilaspur", "Other"],
+      "Dadra & Nagar Haveli": ["Daman", "Diu", "Silvassa", "Other"],
+      "Delhi": ["New Delhi", "North Delhi", "South Delhi", "East Delhi", "West Delhi", "Other"],
+      "Goa": ["Panaji", "Margao", "Vasco da Gama", "Other"],
+      "Gujarat": ["Ahmedabad", "Surat", "Vadodara", "Rajkot", "Gandhinagar", "Other"],
+      "Haryana": ["Gurugram", "Faridabad", "Panipat", "Ambala", "Other"],
+      "Himachal Pradesh": ["Shimla", "Manali", "Dharamshala", "Other"],
+      "Jammu & Kashmir": ["Srinagar", "Jammu", "Other"],
+      "Jharkhand": ["Ranchi", "Jamshedpur", "Dhanbad", "Other"],
+      "Karnataka": ["Bengaluru", "Mysuru", "Mangaluru", "Hubli", "Other"],
+      "Kerala": ["Thiruvananthapuram", "Kochi", "Kozhikode", "Other"],
+      "Ladakh": ["Leh", "Kargil"],
+      "Lakshadweep": ["Kavaratti", "Other"],
+      "Madhya Pradesh": ["Indore", "Bhopal", "Jabalpur", "Gwalior", "Other"],
+      "Maharashtra": ["Navi Mumbai", "Mumbai", "Pune", "Thane", "Nagpur", "Nashik", "Other"],
+      "Manipur": ["Imphal", "Other"],
+      "Meghalaya": ["Shillong", "Other"],
+      "Mizoram": ["Aizawl", "Other"],
+      "Nagaland": ["Dimapur", "Kohima", "Other"],
+      "Odisha": ["Bhubaneswar", "Cuttack", "Rourkela", "Other"],
+      "Puducherry": ["Puducherry", "Other"],
+      "Punjab": ["Ludhiana", "Amritsar", "Jalandhar", "Patiala", "Other"],
+      "Rajasthan": ["Jaipur", "Jodhpur", "Udaipur", "Kota", "Other"],
+      "Sikkim": ["Gangtok", "Other"],
+      "Tamil Nadu": ["Chennai", "Coimbatore", "Madurai", "Tiruchirappalli", "Other"],
+      "Telangana": ["Hyderabad", "Warangal", "Nizamabad", "Other"],
+      "Tripura": ["Agartala", "Other"],
+      "Uttar Pradesh": ["Lucknow", "Kanpur", "Ghaziabad", "Agra", "Varanasi", "Noida", "Other"],
+      "Uttarakhand": ["Dehradun", "Haridwar", "Roorkee", "Other"],
+      "West Bengal": ["Kolkata", "Howrah", "Darjeeling", "Siliguri", "Other"]
     };
 
+    // Auto-fill State Dropdown
+    const stateDropdown = document.getElementById('custState');
+    const cityDropdown = document.getElementById('custCity');
+    
+    Object.keys(locationData).forEach(state => {
+      let option = document.createElement('option');
+      option.value = state;
+      option.innerText = state;
+      stateDropdown.appendChild(option);
+    });
+
     // Handle State Change to populate Cities
-    document.getElementById('custState').addEventListener('change', function() {
+    stateDropdown.addEventListener('change', function() {
       const state = this.value;
-      const cityDropdown = document.getElementById('custCity');
-      
-      // Reset City dropdown
-      cityDropdown.innerHTML = '<option value="" disabled selected>-- Select your City --</option>';
+      cityDropdown.innerHTML = '<option value="" disabled selected>-- Select City --</option>';
       
       if(state && locationData[state]) {
         locationData[state].forEach(city => {
@@ -452,23 +503,30 @@
       let city = document.getElementById('custCity').value;
       let exactAddress = document.getElementById('custAddress').value.trim();
 
-      // Empty Validation
       if(name === "" || phone === "" || state === "" || city === "" || exactAddress === "") {
         alert("Please fill in all the details, including your State and City.");
         return;
       }
 
-      // Name Validation
+      // STRICT ANTI-SPAM NAME VALIDATION
       let namePattern = /^[a-zA-Z\s]+$/;
+      let vowelPattern = /[aeiouAEIOU]/;
+      let spamPattern = /(.)\1\1/;
+      let noConsecutiveConsonants = /[bcdfghjklmnpqrstvwxyzBCDFGHJKLMNPQRSTVWXYZ]{5,}/;
+
       if (!namePattern.test(name) || name.length < 3) {
-        alert("Please enter a valid Full Name (Letters only).");
+        alert("Please enter a valid Full Name (Letters only, minimum 3 characters).");
+        return;
+      }
+      if (!vowelPattern.test(name) || spamPattern.test(name) || noConsecutiveConsonants.test(name)) {
+        alert("Please enter a REAL name. Fake or spam names are not allowed.");
         return;
       }
 
       // Phone Validation
       let phonePattern = /^[6-9]\d{9}$/;
       if (!phonePattern.test(phone)) {
-        alert("Please enter a valid 10-digit mobile number.");
+        alert("Please enter a valid 10-digit Indian mobile number.");
         return;
       }
 
@@ -478,9 +536,9 @@
         return;
       }
 
-      // Combined Full Address
       let finalFullAddress = exactAddress + ", " + city + ", " + state;
 
+      // Your Web3Forms Access Key is active here
       const WEB3FORMS_ACCESS_KEY = "f4c6e903-c069-465c-9d09-75e3e226c5ef";
 
       document.getElementById('placeOrderBtn').innerText = "Sending Order...";
